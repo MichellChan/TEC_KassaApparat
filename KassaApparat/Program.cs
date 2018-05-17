@@ -8,6 +8,9 @@ namespace KassaApparat
 {
     class Program
     {
+        /// <summary>
+        /// Data object med en produkter som säljs
+        /// </summary>
         public struct produkter {
             public int id;
             public string vareNavn;
@@ -15,6 +18,9 @@ namespace KassaApparat
 
         }
 
+        /// <summary>
+        /// Data object med en produkter som har sålts
+        /// </summary>
         public struct solgtProdukter
         {
             public int id;
@@ -22,14 +28,29 @@ namespace KassaApparat
             public double sum;
         }
 
+        /// <summary>
+        /// Lista med alla produkter som kan säljas
+        /// </summary>
         static List<produkter> listerAfProdukter = new List<produkter>();
+
+        /// <summary>
+        /// Lista med alla produkter som har sålts vid ett tillfälle.
+        /// Kommer att noll ställas efter att kvitto(bong) visas.
+        /// </summary>
         static List<solgtProdukter> listerAfSolgtProdukter = new List<solgtProdukter>();
 
+        /// <summary>
+        /// Main funtion - Körs alltid vid start
+        /// </summary>
+        /// <param name="args">Argument som kan skickas ifrån kommand promt.</param>
         static void Main(string[] args) {
 
 
         }
 
+        /// <summary>
+        /// Läser produkt data ifrån en fil, och lägger varje produkt i en lista med all data
+        /// </summary>
         static void ReadProdukterFraFil() {
             //  Läser data ifrån fil
             string allaVaror = System.IO.File.ReadAllText(@"C:\Users\OokamiChan\source\repos\TEC_KassaApparat\Produkter.csv");
@@ -68,6 +89,11 @@ namespace KassaApparat
 
         }
 
+        /// <summary>
+        /// Letar igenom listan med produkter och när produkten hittas så returneras priset på vara.
+        /// </summary>
+        /// <param name="id">Produkt som vi letar efter</param>
+        /// <returns>Priset på den vara som vi letar efter</returns>
         static double GetVarePris(int id)
         {
             //  Henter prisen fra listen
@@ -84,6 +110,10 @@ namespace KassaApparat
             return -1;
         }
 
+        /// <summary>
+        /// Låter säljare skriva in vilken produkt som säljs,
+        /// och där efter så skall säljaren skriva in antalet produkter.
+        /// </summary>
         static void kasseIndtast()
         {
             Console.Write("Skriv vare id: ");
