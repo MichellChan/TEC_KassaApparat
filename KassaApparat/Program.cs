@@ -22,11 +22,19 @@ namespace KassaApparat
             double sum;
         }
 
+        List<produkter> listerAfProdukter = new List<produkter>();
+        List<solgtProdukter> listerAfSolgtProdukter = new List<solgtProdukter>();
+
+
+
         static void Main(string[] args) {
 
 
         }
 
-        static int getSaleData(int id)
+        static double getVarePris(int id)
+        {
+
+        }
     }
 }
