@@ -128,5 +128,35 @@ namespace KassaApparat
 
             }
         }
+
+        /// <summary>
+        /// Listar alla de närmsta produkter till det produkt id som saknas.
+        /// </summary>
+        /// <param name="id">Produkt id som saknas, och vars närliggande produkter vi skall visa.</param>
+        static void VisProdukterNaraProduktID (int id) {
+            //  kollar alla produkters id tills vårat id är lägren än listans id
+            for (int indexVara=0; (indexVara < listerAfProdukter.Count) && !(id < listerAfProdukter[indexVara].id); indexVara++) {
+                //  Start och slut värden för att lista produkter
+                int startIndex = indexVara - 2;
+                int slutIndex = indexVara + 1;
+
+                //  Om startIndex är lägre än noll, så fixa detta
+                if (startIndex < 0)
+                    startIndex = 0;
+
+                //  Om slutIndex är större än listan med alla produkter, så fixa detta
+                if (slutIndex > listerAfProdukter.Count)
+                    slutIndex = listerAfProdukter.Count;
+
+                //  Töm kommand promt och skriv text
+                Console.Clear();
+                Console.WriteLine("Produkten som du söker finns inte. Är det någon av dessa produkter som du söker?");
+
+                //  Skriv ut produkt ifrån startIndex till slutIndex
+                for (int index = startIndex; index < slutIndex; index++) {
+                    Console.WriteLine(listerAfProdukter[index].ToString());
+                }
+            }
+        }
     }
 }
