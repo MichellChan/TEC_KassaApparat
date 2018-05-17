@@ -80,9 +80,23 @@ namespace KassaApparat
                     return vara.pris;
                 }
             }
-
             // error - hit vill inte
             return -1;
+        }
+
+        static void kasseIndtast()
+        {
+            Console.Write("Skriv vare id: ");
+           string indtastetVareId = Console.ReadLine();
+
+            //  Check om det ær siffror = true, Print antal solde varaer
+            //  False = kolla om det ær bokstæbver eller enter
+            //  Check om sifrorna motsvara en var i listanAfProdukter
+
+            if (indtastetVareId)
+            {
+
+            }
         }
     }
 }
