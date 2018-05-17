@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KassaApparat
 {
@@ -127,6 +124,16 @@ namespace KassaApparat
             {
 
             }
+        }
+
+        /// <summary>
+        /// Vi beräknar den nya summan för mängd rabbat
+        /// </summary>
+        /// <param name="summa">Normal total summa för produkten.</param>
+        /// <returns>Rabaterat summa för produkten</returns>
+        static Double MangaRabat(Double summa) {
+            //  Beräknar den nya summan för rabbaterad produkt
+            return Math.Round(summa * 0.9, 2, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
