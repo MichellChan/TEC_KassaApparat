@@ -30,7 +30,7 @@ namespace KassaApparat
 
         }
 
-        static void readProdukterFraFil() {
+        static void ReadProdukterFraFil() {
             //  Läser data ifrån fil
             string allaVaror = System.IO.File.ReadAllText(@"C:\Users\OokamiChan\source\repos\TEC_KassaApparat\Produkter.csv");
 
@@ -68,9 +68,21 @@ namespace KassaApparat
 
         }
 
-        static double getVarePris(int id)
+        static double GetVarePris(int id)
         {
+            //  Henter prisen fra listen
+            foreach (produkter vara in listerAfProdukter)
+            {
+                //  Tjekker om valgtproduktet har er de samme som i listen
+                if (vara.id == id)
+                {
+                    // returnere varens pris
+                    return vara.pris;
+                }
+            }
 
+            // error - hit vill inte
+            return -1;
         }
     }
 }
