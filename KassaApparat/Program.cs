@@ -209,12 +209,12 @@ namespace KassaApparat
             Console.WriteLine("Sålda varor:");
             //  Skriver ut alla varor som vi har sålt
             foreach(solgtProdukter solgtVare in listerAfSolgtProdukter) {
-                Console.WriteLine("{0,5} {1,-20} {2,5} {3,10:C}", solgtVare.id, solgtVare.vareName, solgtVare.antal, solgtVare.sum);
+                Console.WriteLine("{1,-20} {2,5} {3,10:C}", solgtVare.vareName, solgtVare.antal, solgtVare.sum);
                 totalSumma += solgtVare.sum;
             }
             //  Skriver ut total summan för alla varor
-            Console.WriteLine("-------------------------------------------");
-            Console.WriteLine("Totalt: {0,35:C}", Math.Round(totalSumma, 2, MidpointRounding.AwayFromZero));
+            Console.WriteLine("-------------------------------------");
+            Console.WriteLine("Totalt: {0,30:C}", Math.Round(totalSumma, 2, MidpointRounding.AwayFromZero));
         }
     }
 }
