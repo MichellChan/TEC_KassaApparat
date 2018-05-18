@@ -132,56 +132,21 @@ namespace KassaApparat
         /// </summary>
         static void kasseIndtast()
         {
-            int vareid = 0;
-            bool ok = false;
+            Console.Write("Skriv vare id: ");
+           string indtastetVareId = Console.ReadLine();
 
-            do
-            {
-                Console.Write("Skriv vare id: ");
-                string indtastetVareId = Console.ReadLine();
-
-                ok = CheckIntastvardi(indtastetVareId, ref vareid);
-
-                //  vi fic enter som vareid då ær vi klara
-                if (!ok && vareid == -1)
-                    return;
-                if ()
-                {
-
-                }
-
-
-                //  Check om det ær siffror = true, 
-                //      Check om sifrorna motsvara en var i listanAfProdukter,
-                //      true = Print antal solde varaer,
-                //      false = vi printar de varor som ligger närmast det id som blev inskriviet, där efter så ber vi säljaren att skriva in ett nytt id
-                //  False = kolla om det ær bokstæbver eller enter
-                //  Vid enter = KLAR  skriv ut bong
-
-
-            } while (!ok);
-
-
+            //  Check om det ær siffror = true, 
+            //      Check om sifrorna motsvara en var i listanAfProdukter,
+            //      true = Print antal solde varaer,
+            //      false = vi printar de varor som ligger närmast det id som blev inskriviet, där efter så ber vi säljaren att skriva in ett nytt id
+            //  False = kolla om det ær bokstæbver eller enter
+            //  Vid enter = KLAR  skriv ut bong
             
-        }
 
-        static bool CheckIntastvardi(string intastVareID, ref int vareID)
-        {
-            if (!int.TryParse(intastVareID, out vareID))
+            if (indtastetVareId)
             {
-                if (intastVareID == "")
-                {
-                    vareID = -1;
-                }
-                else
-                {
-                    vareID = -2;
-                }
 
-                return false;
             }
-
-            return true;
         }
 
         /// <summary>
@@ -212,26 +177,33 @@ namespace KassaApparat
         /// <param name="id">Produkt id som saknas, och vars närliggande produkter vi skall visa.</param>
         static void VisProdukterNaraProduktID (int id) {
             //  kollar alla produkters id tills vårat id är lägren än listans id
-            for (int indexVara=0; (indexVara < listerAfProdukter.Count) && !(id < listerAfProdukter[indexVara].id); indexVara++) {
-                //  Start och slut värden för att lista produkter
-                int startIndex = indexVara - 2;
-                int slutIndex = indexVara + 1;
+            for (int indexVara=0; (indexVara < listerAfProdukter.Count); indexVara++) {
+                //  Check om fåran vara ID är mindre än listans vara ID
+                if (!(id < listerAfProdukter[indexVara].id)) {
+                    //  Start och slut värden för att lista produkter
+                    int startIndex = indexVara - 2;
+                    int slutIndex = indexVara + 1;
 
-                //  Om startIndex är lägre än noll, så fixa detta
-                if (startIndex < 0)
-                    startIndex = 0;
+                    //  Om startIndex är lägre än noll, så fixa detta
+                    if (startIndex < 0)
+                        startIndex = 0;
 
-                //  Om slutIndex är större än listan med alla produkter, så fixa detta
-                if (slutIndex > listerAfProdukter.Count)
-                    slutIndex = listerAfProdukter.Count;
+                    //  Om slutIndex är större än listan med alla produkter, så fixa detta
+                    if (slutIndex > listerAfProdukter.Count)
+                        slutIndex = listerAfProdukter.Count;
 
-                //  Töm kommand promt och skriv text
-                Console.Clear();
-                Console.WriteLine("Produkten som du söker finns inte. Är det någon av dessa produkter som du söker?");
+                    //  Töm kommand promt och skriv text
+                    Console.Clear();
+                    Console.WriteLine("Produkten som du söker finns inte. Är det någon av dessa produkter som du söker?");
 
-                //  Skriv ut produkt ifrån startIndex till slutIndex
-                for (int index = startIndex; index < slutIndex; index++) {
-                    Console.WriteLine(listerAfProdukter[index].ToString());
+                    //  Skriv ut produkt ifrån startIndex till slutIndex
+                    for (int index = startIndex; index < slutIndex; index++) {
+                        Console.WriteLine(listerAfProdukter[index].ToString());
+                    }
+
+                    //  Vi har skrivit ut våra varor som ligger ovan och under det vare ID som vi letade efter
+                    //  Vi är där med klara
+                    return;
                 }
             }
         }
