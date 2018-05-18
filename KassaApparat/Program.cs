@@ -42,8 +42,12 @@ namespace KassaApparat
         /// </summary>
         /// <param name="args">Argument som kan skickas ifrån kommand promt.</param>
         static void Main(string[] args) {
-
+            ReadProdukterFraFil();
             kasseIndtast();
+            PrintBong();
+
+            Console.WriteLine("enter to exit");
+            Console.ReadLine();
         }
 
         /// <summary>
@@ -51,7 +55,8 @@ namespace KassaApparat
         /// </summary>
         static void ReadProdukterFraFil() {
             //  Läser data ifrån fil
-            string allaVaror = System.IO.File.ReadAllText(@"C:\Users\OokamiChan\source\repos\TEC_KassaApparat\Produkter.csv");
+            //string allaVaror = System.IO.File.ReadAllText(@"C:\Users\OokamiChan\source\repos\TEC_KassaApparat\Produkter.csv");
+            string allaVaror = System.IO.File.ReadAllText(@"C:\Users\Tec\source\repos\TEC_KassaApparat\Produkter.csv");
 
             //  Delar upp till de olika raderna
             string []itemVara = allaVaror.Split(';');
@@ -60,29 +65,35 @@ namespace KassaApparat
             produkter preProdukt = new produkter();
 
             //  Delar upp id, varans namn och pris i olika delar
-            foreach (string vara in itemVara) {
+            foreach (string vara in itemVara)
+            {
                 string[] delVara = vara.Split(',');
-
-                //  Iterera igen alla delar utav våran varas data
-                for(int i=0; i<3; i++) {
-                    switch (i) {
-                        case 0:
-                            //  Hämta varans ID
-                            preProdukt.id = Convert.ToInt16(delVara[i]);
-                            break;
-                        case 1:
-                            //  Hämta varans Namn
-                            preProdukt.vareNavn = delVara[i];
-                            break;
-                        case 2:
-                            //  Hämta varans Pris
-                            preProdukt.pris = Convert.ToDouble(delVara[i]);
-                            break;
+                //string test = delVara.ToString();
+                if (delVara[0].ToString() != "")
+                {
+                    //  Iterera igen alla delar utav våran varas data
+                    for (int i = 0; i < 3; i++)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                //  Hämta varans ID
+                                preProdukt.id = Convert.ToInt16(delVara[i].Trim());
+                                break;
+                            case 1:
+                                //  Hämta varans Namn
+                                preProdukt.vareNavn = delVara[i].Trim();
+                                break;
+                            case 2:
+                                //  Hämta varans Pris
+                                preProdukt.pris = Convert.ToDouble(delVara[i].Trim());
+                                break;
+                        }
                     }
-                }
 
-                //  Lägg till vara i listerAfProdukter
-                listerAfProdukter.Add(preProdukt);
+                    //  Lägg till vara i listerAfProdukter
+                    listerAfProdukter.Add(preProdukt);
+                }
             }
 
         }
@@ -132,43 +143,74 @@ namespace KassaApparat
         /// </summary>
         static void kasseIndtast()
         {
-            int vareid = 0;
-            bool ok = false;
-
             do
             {
-                produkter vare = new produkter();
+                int vareid = 0;
+                bool ok = false;
 
-                Console.Write("Skriv vare id: ");
-                string indtastetVareId = Console.ReadLine();
-
-                ok = CheckIntastvardi(indtastetVareId, ref vareid);
-
-                //  vi fic enter som vareid då ær vi klara
-                if (!ok && vareid == -1)
-                    return;
-
-                vare.id = vareid;
-
-                if (!listerAfProdukter.Contains(vare))
+                do
                 {
-                    ok = false;
-                    VisProdukterNaraProduktID(vareid);
+                    Console.Write("Skriv vare id: ");
+                    string indtastetVareId = Console.ReadLine();
+
+                    ok = CheckIntastvardi(indtastetVareId, ref vareid);
+
+                    //  vi fic enter som vareid då ær vi klara
+                    if (!ok && vareid == -1)
+                        return;
+
+                    if (!CheckProduktIDExists(vareid))
+                    {
+                        ok = false;
+                        VisProdukterNaraProduktID(vareid);
+                    }
+                } while (!ok);
+
+                do
+                {
+                    int antal = 0;
+
+                    Console.Write("Skriv vare antal: ");
+                    string indtastetVareId = Console.ReadLine();
+
+                    ok = CheckIntastvardi(indtastetVareId, ref antal);
+
+                    //  vi fic enter som vareid då ær vi klara
+                    if (!ok && antal == -1)
+                        return;
+
+                    solgtProdukter solgtItem = new solgtProdukter();
+
+                    solgtItem.id = vareid;
+                    solgtItem.antal = antal;
+                    solgtItem.vareName = getVareNamn(vareid);
+                    solgtItem.sum = antal * GetVarePris(vareid);
+
+                    listerAfSolgtProdukter.Add(solgtItem);
+
+                    if (antal > 4)
+                    {
+                        MangaRabat(solgtItem.sum, vareid);
+                    }
+
+                } while (!ok);
+
+            } while (true);
+
+
+        }
+
+        static bool CheckProduktIDExists (int produktID)
+        {
+            foreach (produkter vareItem in listerAfProdukter)
+            {
+                if (vareItem.id == produktID)
+                {
+                    return true;
                 }
+            }
 
-
-                //  Check om det ær siffror = true, 
-                //      Check om sifrorna motsvara en var i listanAfProdukter,
-                //      true = Print antal solde varaer,
-                //      false = vi printar de varor som ligger närmast det id som blev inskriviet, där efter så ber vi säljaren att skriva in ett nytt id
-                //  False = kolla om det ær bokstæbver eller enter
-                //  Vid enter = KLAR  skriv ut bong
-
-
-            } while (!ok);
-
-
-
+            return false;
         }
 
         static bool CheckIntastvardi(string intastVareID, ref int vareID)
@@ -220,7 +262,7 @@ namespace KassaApparat
             //  kollar alla produkters id tills vårat id är lägren än listans id
             for (int indexVara=0; (indexVara < listerAfProdukter.Count); indexVara++) {
                 //  Check om fåran vara ID är mindre än listans vara ID
-                if (!(id < listerAfProdukter[indexVara].id)) {
+                if (!(id > listerAfProdukter[indexVara].id)) {
                     //  Start och slut värden för att lista produkter
                     int startIndex = indexVara - 2;
                     int slutIndex = indexVara + 1;
@@ -239,7 +281,7 @@ namespace KassaApparat
 
                     //  Skriv ut produkt ifrån startIndex till slutIndex
                     for (int index = startIndex; index < slutIndex; index++) {
-                        Console.WriteLine(listerAfProdukter[index].ToString());
+                        Console.WriteLine("{0,5} {1,-20} {2,5:C}", listerAfProdukter[index].id, listerAfProdukter[index].vareNavn, listerAfProdukter[index].pris);
                     }
 
                     //  Vi har skrivit ut våra varor som ligger ovan och under det vare ID som vi letade efter
@@ -261,7 +303,7 @@ namespace KassaApparat
             Console.WriteLine("Sålda varor:");
             //  Skriver ut alla varor som vi har sålt
             foreach(solgtProdukter solgtVare in listerAfSolgtProdukter) {
-                Console.WriteLine("{1,-20} {2,5} {3,10:C}", solgtVare.vareName, solgtVare.antal, solgtVare.sum);
+                Console.WriteLine("{0,-20} {1,5} {2,10:C}", solgtVare.vareName, solgtVare.antal, solgtVare.sum);
                 totalSumma += solgtVare.sum;
             }
             //  Skriver ut total summan för alla varor
