@@ -132,21 +132,56 @@ namespace KassaApparat
         /// </summary>
         static void kasseIndtast()
         {
-            Console.Write("Skriv vare id: ");
-           string indtastetVareId = Console.ReadLine();
+            int vareid = 0;
+            bool ok = false;
 
-            //  Check om det ær siffror = true, 
-            //      Check om sifrorna motsvara en var i listanAfProdukter,
-            //      true = Print antal solde varaer,
-            //      false = vi printar de varor som ligger närmast det id som blev inskriviet, där efter så ber vi säljaren att skriva in ett nytt id
-            //  False = kolla om det ær bokstæbver eller enter
-            //  Vid enter = KLAR  skriv ut bong
-
-
-            if (indtastetVareId)
+            do
             {
+                Console.Write("Skriv vare id: ");
+                string indtastetVareId = Console.ReadLine();
 
+                ok = CheckIntastvardi(indtastetVareId, ref vareid);
+
+                //  vi fic enter som vareid då ær vi klara
+                if (!ok && vareid == -1)
+                    return;
+                if ()
+                {
+
+                }
+
+
+                //  Check om det ær siffror = true, 
+                //      Check om sifrorna motsvara en var i listanAfProdukter,
+                //      true = Print antal solde varaer,
+                //      false = vi printar de varor som ligger närmast det id som blev inskriviet, där efter så ber vi säljaren att skriva in ett nytt id
+                //  False = kolla om det ær bokstæbver eller enter
+                //  Vid enter = KLAR  skriv ut bong
+
+
+            } while (!ok);
+
+
+            
+        }
+
+        static bool CheckIntastvardi(string intastVareID, ref int vareID)
+        {
+            if (!int.TryParse(intastVareID, out vareID))
+            {
+                if (intastVareID == "")
+                {
+                    vareID = -1;
+                }
+                else
+                {
+                    vareID = -2;
+                }
+
+                return false;
             }
+
+            return true;
         }
 
         /// <summary>
