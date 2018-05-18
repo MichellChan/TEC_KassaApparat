@@ -135,9 +135,13 @@ namespace KassaApparat
             Console.Write("Skriv vare id: ");
            string indtastetVareId = Console.ReadLine();
 
-            //  Check om det ær siffror = true, Print antal solde varaer
+            //  Check om det ær siffror = true, 
+            //      Check om sifrorna motsvara en var i listanAfProdukter,
+            //      true = Print antal solde varaer,
+            //      false = vi printar de varor som ligger närmast det id som blev inskriviet, där efter så ber vi säljaren att skriva in ett nytt id
             //  False = kolla om det ær bokstæbver eller enter
-            //  Check om sifrorna motsvara en var i listanAfProdukter
+            //  Vid enter = KLAR  skriv ut bong
+
 
             if (indtastetVareId)
             {
