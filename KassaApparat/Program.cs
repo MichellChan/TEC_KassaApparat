@@ -43,7 +43,7 @@ namespace KassaApparat
         /// <param name="args">Argument som kan skickas ifrån kommand promt.</param>
         static void Main(string[] args) {
 
-
+            kasseIndtast();
         }
 
         /// <summary>
@@ -137,6 +137,8 @@ namespace KassaApparat
 
             do
             {
+                produkter vare = new produkter();
+
                 Console.Write("Skriv vare id: ");
                 string indtastetVareId = Console.ReadLine();
 
@@ -145,9 +147,13 @@ namespace KassaApparat
                 //  vi fic enter som vareid då ær vi klara
                 if (!ok && vareid == -1)
                     return;
-                if ()
-                {
 
+                vare.id = vareid;
+
+                if (!listerAfProdukter.Contains(vare))
+                {
+                    ok = false;
+                    VisProdukterNaraProduktID(vareid);
                 }
 
 
