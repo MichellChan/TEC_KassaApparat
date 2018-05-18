@@ -21,6 +21,7 @@ namespace KassaApparat
         public struct solgtProdukter
         {
             public int id;
+            public string vareName;
             public int antal;
             public double sum;
         }
@@ -108,6 +109,24 @@ namespace KassaApparat
         }
 
         /// <summary>
+        /// Letar igenom listan med produkter och hämtar namnet på produkten
+        /// </summary>
+        /// <param name="id">Produkten som vi letar efter</param>
+        /// <returns>Produketens namn returnaras</returns>
+        static string getVareNamn(int id) {
+            //  Henter prisen fra listen
+            foreach (produkter vara in listerAfProdukter) {
+                //  Tjekker om valgtproduktet har er de samme som i listen
+                if (vara.id == id) {
+                    // returnere varens pris
+                    return vara.vareNavn;
+                }
+            }
+            // error - hit vill inte
+            return "";
+        }
+
+        /// <summary>
         /// Låter säljare skriva in vilken produkt som säljs,
         /// och där efter så skall säljaren skriva in antalet produkter.
         /// </summary>
@@ -130,10 +149,16 @@ namespace KassaApparat
         /// Vi beräknar den nya summan för mängd rabbat
         /// </summary>
         /// <param name="summa">Normal total summa för produkten.</param>
-        /// <returns>Rabaterat summa för produkten</returns>
-        static Double MangaRabat(Double summa) {
-            //  Beräknar den nya summan för rabbaterad produkt
-            return Math.Round(summa * 0.9, 2, MidpointRounding.AwayFromZero);
+        /// <param name="produktID">Produktens ID som skall ha rabbat.</param>
+        static void MangaRabat(Double summa, int produktID) {
+            solgtProdukter rabatProdukt = new solgtProdukter();
+
+            rabatProdukt.id = produktID;
+            rabatProdukt.vareName = getVareNamn(produktID) + " - Rabbat";
+            rabatProdukt.antal = 1;
+            rabatProdukt.sum = -(Math.Round(summa * 0.1, 2, MidpointRounding.AwayFromZero));
+
+            listerAfSolgtProdukter.Add(rabatProdukt);
         }
 
         /// <summary>
