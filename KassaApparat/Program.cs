@@ -196,5 +196,25 @@ namespace KassaApparat
                 }
             }
         }
+
+        /// <summary>
+        /// Skriver ut de sålda varorna tillsammans med total summan för alla varor
+        /// </summary>
+        static void PrintBong () {
+            //  Här i kommer total summan för alla varor
+            double totalSumma = 0;
+
+            //  Rensar skärmen
+            Console.Clear();
+            Console.WriteLine("Sålda varor:");
+            //  Skriver ut alla varor som vi har sålt
+            foreach(solgtProdukter solgtVare in listerAfSolgtProdukter) {
+                Console.WriteLine("{0,5} {1,-20} {2,5} {3,10:C}", solgtVare.id, solgtVare.vareName, solgtVare.antal, solgtVare.sum);
+                totalSumma += solgtVare.sum;
+            }
+            //  Skriver ut total summan för alla varor
+            Console.WriteLine("-------------------------------------------");
+            Console.WriteLine("Totalt: {0,35:C}", Math.Round(totalSumma, 2, MidpointRounding.AwayFromZero));
+        }
     }
 }
