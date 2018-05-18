@@ -151,13 +151,19 @@ namespace KassaApparat
         /// <param name="summa">Normal total summa för produkten.</param>
         /// <param name="produktID">Produktens ID som skall ha rabbat.</param>
         static void MangaRabat(Double summa, int produktID) {
+            //  Nytt object där vi lägger in ny data
             solgtProdukter rabatProdukt = new solgtProdukter();
 
+            //  Lägger in de olika delaran i de olika delarna utav objectet
             rabatProdukt.id = produktID;
+            //  På varans namn så lägger vi till rabbat så att vi vet att det är rabbat
             rabatProdukt.vareName = getVareNamn(produktID) + " - Rabbat";
+            //  Denna produkt kan bara förekomma en gång
             rabatProdukt.antal = 1;
+            //  Beräknar hur stor rabbaten är
             rabatProdukt.sum = -(Math.Round(summa * 0.1, 2, MidpointRounding.AwayFromZero));
 
+            //  Lägger till posten med information för rabbaten i sålda varor
             listerAfSolgtProdukter.Add(rabatProdukt);
         }
 
