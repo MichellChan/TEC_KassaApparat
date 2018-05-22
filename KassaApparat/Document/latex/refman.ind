@@ -34,6 +34,7 @@
     \subitem {antal}, \hyperpage{11}
     \subitem {id}, \hyperpage{11}
     \subitem {sum}, \hyperpage{11}
+    \subitem {vare\+Name}, \hyperpage{11}
 
   \indexspace
 
@@ -48,6 +49,9 @@
 
   \indexspace
 
+  \item {vare\+Name}
+    \subitem {Kassa\+Apparat\+::\+Program\+::solgt\+Produkter}, 
+		\hyperpage{11}
   \item {vare\+Navn}
     \subitem {Kassa\+Apparat\+::\+Program\+::produkter}, \hyperpage{10}
 

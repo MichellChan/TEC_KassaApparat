@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace KassaApparat
 {
@@ -8,7 +9,8 @@ namespace KassaApparat
         /// <summary>
         /// Data object med en produkter som säljs
         /// </summary>
-        public struct produkter {
+        public struct produkter
+        {
             public int id;
             public string vareNavn;
             public double pris;
@@ -42,10 +44,14 @@ namespace KassaApparat
         /// </summary>
         /// <param name="args">Argument som kan skickas ifrån kommand promt.</param>
         static void Main(string[] args) {
+            //  Läser in alla varor
             ReadProdukterFraFil();
+            //  Kriv in vilka varaor som sälgs
             kasseIndtast();
+            //  Skriv ut lista med sålda varor
             PrintBong();
 
+            //  Exit
             Console.WriteLine("enter to exit");
             Console.ReadLine();
         }
@@ -55,47 +61,28 @@ namespace KassaApparat
         /// </summary>
         static void ReadProdukterFraFil() {
             //  Läser data ifrån fil
-            //string allaVaror = System.IO.File.ReadAllText(@"C:\Users\OokamiChan\source\repos\TEC_KassaApparat\Produkter.csv");
-            string allaVaror = System.IO.File.ReadAllText(@"C:\Users\Tec\source\repos\TEC_KassaApparat\Produkter.csv");
+            string sti = @"C:\Users\OokamiChan\source\repos\TEC_KassaApparat\Produkter.csv";
+            //string sti = @"C:\Users\Tec\source\repos\TEC_KassaApparat\Produkter.csv";
+            using (StreamReader sr = File.OpenText(sti)) {
+                //  Declarerar vara string
+                string itemVara = "";
 
-            //  Delar upp till de olika raderna
-            string []itemVara = allaVaror.Split(';');
+                //  Delar upp till de olika raderna
+                while ((itemVara = sr.ReadLine()) != null) {
+                    //  Delar upp id, varans namn och pris i olika delar
+                    string[] delVara = itemVara.Split(';');
 
-            //  Skapar ett objekt där vi kan lägga in våra värden i
-            produkter preProdukt = new produkter();
+                    //  Skapar ett objekt där vi kan lägga in våra värden i
+                    produkter preProdukt = new produkter {
+                        id = Convert.ToInt16(delVara[0].Trim()),
+                        vareNavn = delVara[1].Trim(),
+                        pris = Convert.ToDouble(delVara[2].Trim())
+                    };
 
-            //  Delar upp id, varans namn och pris i olika delar
-            foreach (string vara in itemVara)
-            {
-                string[] delVara = vara.Split(',');
-                //string test = delVara.ToString();
-                if (delVara[0].ToString() != "")
-                {
-                    //  Iterera igen alla delar utav våran varas data
-                    for (int i = 0; i < 3; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                //  Hämta varans ID
-                                preProdukt.id = Convert.ToInt16(delVara[i].Trim());
-                                break;
-                            case 1:
-                                //  Hämta varans Namn
-                                preProdukt.vareNavn = delVara[i].Trim();
-                                break;
-                            case 2:
-                                //  Hämta varans Pris
-                                preProdukt.pris = Convert.ToDouble(delVara[i].Trim());
-                                break;
-                        }
-                    }
-
-                    //  Lägg till vara i listerAfProdukter
+                    //  Lägger till produkten i våran lista
                     listerAfProdukter.Add(preProdukt);
                 }
             }
-
         }
 
         /// <summary>
@@ -103,14 +90,11 @@ namespace KassaApparat
         /// </summary>
         /// <param name="id">Produkt som vi letar efter</param>
         /// <returns>Priset på den vara som vi letar efter</returns>
-        static double GetVarePris(int id)
-        {
+        static double GetVarePris(int id) {
             //  Henter prisen fra listen
-            foreach (produkter vara in listerAfProdukter)
-            {
+            foreach (produkter vara in listerAfProdukter) {
                 //  Tjekker om valgtproduktet har er de samme som i listen
-                if (vara.id == id)
-                {
+                if (vara.id == id) {
                     // returnere varens pris
                     return vara.pris;
                 }
@@ -141,71 +125,79 @@ namespace KassaApparat
         /// Låter säljare skriva in vilken produkt som säljs,
         /// och där efter så skall säljaren skriva in antalet produkter.
         /// </summary>
-        static void kasseIndtast()
-        {
-            do
-            {
+        static void kasseIndtast() {
+            do {
                 int vareid = 0;
                 bool ok = false;
 
-                do
-                {
+                //  Loop för in skrivining utav varor som säljs
+                do {
+                    //  Läser in varans id
                     Console.Write("Skriv vare id: ");
                     string indtastetVareId = Console.ReadLine();
 
+                    //  Kollar om vi skrivier in en sifra eller bokstäver
                     ok = CheckIntastvardi(indtastetVareId, ref vareid);
 
                     //  vi fic enter som vareid då ær vi klara
                     if (!ok && vareid == -1)
                         return;
 
-                    if (!CheckProduktIDExists(vareid))
-                    {
+                    //  Kollar om varan finns i våran lista med varor
+                    if (!CheckProduktIDExists(vareid)) {
+                        //  Om varan saknas så skriv ut de varor som finns i närheten
                         ok = false;
                         VisProdukterNaraProduktID(vareid);
                     }
-                } while (!ok);
+                } while (!ok);  //  Gör detta s¨länge som vi får false
 
-                do
-                {
+                //  Vi gör samma sak för antalet sålda varor
+                do {
                     int antal = 0;
 
+                    //  Skriv in antalet som säljs
                     Console.Write("Skriv vare antal: ");
                     string indtastetVareId = Console.ReadLine();
 
+                    //  Kolla om det är en siffra eller bokstav som skrivs in
                     ok = CheckIntastvardi(indtastetVareId, ref antal);
 
                     //  vi fic enter som vareid då ær vi klara
                     if (!ok && antal == -1)
                         return;
 
-                    solgtProdukter solgtItem = new solgtProdukter();
+                    //  Skapa ett object där vi kan lägga in all data i
+                    solgtProdukter solgtItem = new solgtProdukter {
+                        id = vareid,
+                    antal = antal,
+                    vareName = getVareNamn(vareid),
+                    sum = antal * GetVarePris(vareid)
+                };
 
-                    solgtItem.id = vareid;
-                    solgtItem.antal = antal;
-                    solgtItem.vareName = getVareNamn(vareid);
-                    solgtItem.sum = antal * GetVarePris(vareid);
-
+                    //  Lägg till varan i sålda varor listan
                     listerAfSolgtProdukter.Add(solgtItem);
 
-                    if (antal > 4)
-                    {
+                    //  Om vi har mänd rabbat så gör en beräkning på hur stor rabbat som vi får
+                    //  Och lägg till den i listan
+                    if (antal > 4) {
                         MangaRabat(solgtItem.sum, vareid);
                     }
 
-                } while (!ok);
+                } while (!ok);  //  Gör detta så länge som vi får false
 
-            } while (true);
+            } while (true); //  Denna loop går ej att bryta om inte du trycker enter i antal eller id fälten
 
 
         }
 
-        static bool CheckProduktIDExists (int produktID)
-        {
-            foreach (produkter vareItem in listerAfProdukter)
-            {
-                if (vareItem.id == produktID)
-                {
+        /// <summary>
+        /// Kollar om en vara finns i listan med produkter
+        /// </summary>
+        /// <param name="produktID">Det ID som vi söker</param>
+        /// <returns>Ture/false om varan finns eller inte</returns>
+        static bool CheckProduktIDExists(int produktID) {
+            foreach (produkter vareItem in listerAfProdukter) {
+                if (vareItem.id == produktID) {
                     return true;
                 }
             }
@@ -213,16 +205,17 @@ namespace KassaApparat
             return false;
         }
 
-        static bool CheckIntastvardi(string intastVareID, ref int vareID)
-        {
-            if (!int.TryParse(intastVareID, out vareID))
-            {
-                if (intastVareID == "")
-                {
+        /// <summary>
+        /// Kollar om det värde som vi skriver in är ett siffra
+        /// </summary>
+        /// <param name="intastVareID">den sträng med våran vara ID</param>
+        /// <param name="vareID">Returnerar en int med vara ID</param>
+        /// <returns>true om det var en siffra som skrevs in</returns>
+        static bool CheckIntastvardi(string intastVareID, ref int vareID) {
+            if (!int.TryParse(intastVareID, out vareID)) {
+                if (intastVareID == "") {
                     vareID = -1;
-                }
-                else
-                {
+                } else {
                     vareID = -2;
                 }
 
@@ -258,9 +251,9 @@ namespace KassaApparat
         /// Listar alla de närmsta produkter till det produkt id som saknas.
         /// </summary>
         /// <param name="id">Produkt id som saknas, och vars närliggande produkter vi skall visa.</param>
-        static void VisProdukterNaraProduktID (int id) {
+        static void VisProdukterNaraProduktID(int id) {
             //  kollar alla produkters id tills vårat id är lägren än listans id
-            for (int indexVara=0; (indexVara < listerAfProdukter.Count); indexVara++) {
+            for (int indexVara = 0; (indexVara < listerAfProdukter.Count); indexVara++) {
                 //  Check om fåran vara ID är mindre än listans vara ID
                 if (!(id > listerAfProdukter[indexVara].id)) {
                     //  Start och slut värden för att lista produkter
@@ -294,7 +287,7 @@ namespace KassaApparat
         /// <summary>
         /// Skriver ut de sålda varorna tillsammans med total summan för alla varor
         /// </summary>
-        static void PrintBong () {
+        static void PrintBong() {
             //  Här i kommer total summan för alla varor
             double totalSumma = 0;
 
@@ -302,7 +295,7 @@ namespace KassaApparat
             Console.Clear();
             Console.WriteLine("Sålda varor:");
             //  Skriver ut alla varor som vi har sålt
-            foreach(solgtProdukter solgtVare in listerAfSolgtProdukter) {
+            foreach (solgtProdukter solgtVare in listerAfSolgtProdukter) {
                 Console.WriteLine("{0,-20} {1,5} {2,10:C}", solgtVare.vareName, solgtVare.antal, solgtVare.sum);
                 totalSumma += solgtVare.sum;
             }
